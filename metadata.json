@@ -1,0 +1,6 @@
+{
+  "name": "PoliFood Polinela - Campus Dining System",
+  "description": "Kantin Digital & Pesan Antar Civitas Kampus Politeknik Negeri Lampung (Polinela)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
