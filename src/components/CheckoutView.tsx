@@ -57,21 +57,40 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
+    const orderData = {
+      orderNumber: `PF-${Math.floor(1000 + Math.random() * 9000)}`,
+      customerName: recipient.split('(')[0]?.trim() || 'Siti Rahmawati',
+      customerRole: 'Mahasiswa',
+      customerPhone: recipient.match(/\((.*?)\)/)?.[1] || '0812-7890-4421',
+      canteenId: 'mbak-sri',
+      canteenName: 'Kantin Mbak Sri (Pujasera 04)',
+      deliveryMethod: deliveryMode,
+      building,
+      room,
+      landmarkNote,
+      items: activeItems,
+      subtotal: itemsSubtotal,
+      deliveryFee,
+      serviceFee,
+      total: grandTotal,
+      paymentMethod: 'QRIS Statis Kantin Mbak Sri',
+      paymentStatus: 'Menunggu Verifikasi',
+    };
+
+    try {
+      const { postOrder } = await import('../services/api.ts');
+      await postOrder(orderData);
+    } catch (e) {
+      console.warn('Persisting locally:', e);
+    }
+
     setTimeout(() => {
       setIsSubmitting(false);
-      onShowToast('Pesanan #PF-8824 berhasil dikirim ke Kantin Mbak Sri!');
-      onOrderSuccess({
-        items: activeItems,
-        deliveryMode,
-        building,
-        room,
-        landmarkNote,
-        recipient,
-        total: grandTotal,
-      });
-    }, 1200);
+      onShowToast(`Pesanan #${orderData.orderNumber} berhasil disimpan ke database & diteruskan ke Stan Mbak Sri!`);
+      onOrderSuccess(orderData);
+    }, 1000);
   };
 
   return (

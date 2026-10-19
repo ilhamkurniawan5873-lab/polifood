@@ -65,12 +65,15 @@ export const KantinView: React.FC<KantinViewProps> = ({
     onShowToast('Notifikasi dikirim! Driver Bima Arya segera menjemput pesanan #PF-8822.');
   };
 
-  const toggleMenuItem = (id: string, name: string) => {
+  const toggleMenuItem = async (id: string, name: string) => {
     setMenuItems((prev) =>
       prev.map((item) => {
         if (item.id === id) {
           const next = !item.isAvailable;
           onShowToast(`${name} disetel ${next ? 'TERSEDIA' : 'HABIS'}.`);
+          import('../services/api.ts').then(({ setMenuItemAvailability }) => {
+            setMenuItemAvailability(id, next);
+          }).catch(() => {});
           return { ...item, isAvailable: next };
         }
         return item;

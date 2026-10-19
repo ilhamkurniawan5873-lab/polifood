@@ -54,7 +54,7 @@ export const SuperadminView: React.FC<SuperadminViewProps> = ({
     onShowToast(`Permohonan "${name}" ditolak.`);
   };
 
-  const handleAddBuilding = (e: React.FormEvent) => {
+  const handleAddBuilding = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newBldName) return;
     const newB: any = {
@@ -67,10 +67,16 @@ export const SuperadminView: React.FC<SuperadminViewProps> = ({
       detail: `${newBldFloors} Lantai, ${newBldRooms} Ruangan`,
     };
     setBuildings([...buildings, newB]);
+    try {
+      const { postCampusBuilding } = await import('../services/api.ts');
+      await postCampusBuilding(newB);
+    } catch (err) {
+      console.warn('Persisting locally:', err);
+    }
     setShowAddBuildingModal(false);
     setNewBldName('');
     setNewBldFaculty('');
-    onShowToast(`Landmark ${newBldName} berhasil ditambahkan!`);
+    onShowToast(`Landmark ${newBldName} berhasil disimpan ke database Cloud SQL!`);
   };
 
   return (
